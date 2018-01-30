@@ -1,0 +1,9 @@
+Package: com.cpdigitaldarkroom.musicbar
+Name: MusicBar
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Quick Bottom Music Controls
+Maintainer: CP Digital Darkroom <tweaks@cpdigitaldarkroom.support>
+Author: CP Digital Darkroom <tweaks@cpdigitaldarkroom.support>
+Section: Tweaks
