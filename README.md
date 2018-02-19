@@ -19,7 +19,7 @@ Once an update for Cydia is available, this package will be on a public repo for
 
 ## Why FOSS
 
-You may have read I've stopped making paid packages and made all my previous work free. I did this for a couple reasons: a) I don't have as much time as I did to hack away, b) it was stressful to worry about pirates, c) I just want people to use my shit and ejoy it without worrying about finding cracked copies.
+You may have read I've stopped making paid packages and made all my previous work free. I did this for a couple reasons: a) I don't have as much time as I did to hack away, b) it was stressful to worry about pirates, c) I just want people to use my shit and enjoy it without worrying about finding cracked copies.
 
 Jailbreaking is going through a tough spot and I think it's time to shed the bullshit. Let's have some fun shall we?
 

@@ -8,6 +8,7 @@
 
 #import "CPDDMBBarController.h"
 #import "CPDDMBBarView.h"
+#import "CPDDMBButton.h"
 #import "MusicBar.h"
 #import "MediaRemote.h"
 
@@ -16,7 +17,7 @@
 @property (strong, nonatomic) MPVolumeView *volumeSlider;
 @property (strong, nonatomic) SBWallpaperEffectView *backgroundView;
 @property (strong, nonatomic) UIButton *forwardButton;
-@property (strong, nonatomic) UIButton *playPauseButton;
+@property (strong, nonatomic) CPDDMBButton *playPauseButton;
 
 @end
 
@@ -63,30 +64,32 @@
     	[_forwardButton addTarget:self action:@selector(handleForwardButton:) forControlEvents:UIControlEventTouchUpInside];
     	[_forwardButton setImage:forwardImage forState:UIControlStateNormal];
     	[_forwardButton setImage:[forwardImage _flatImageWithColor:[UIColor whiteColor]] forState:UIControlStateHighlighted];
+        _forwardButton.contentEdgeInsets = UIEdgeInsetsMake(3, 3, 3, 3);
     	_forwardButton.translatesAutoresizingMaskIntoConstraints = NO;
     	[self addSubview:_forwardButton];
 
     	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_backgroundView attribute:NSLayoutAttributeRight multiplier:1.0 constant:-15]];
     	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_backgroundView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:24]];
-    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:24]];
+    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:27]];
+    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_forwardButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:27]];
 
     	UIImage *playImage = [UIImage imageNamed:@"Play" inBundle:[NSBundle bundleWithPath:@"/Library/Application Support/MusicBar/ImageAssets.bundle"]];
     	if(!playImage) {
     		playImage = [UIImage imageNamed:@"Play" inBundle:[NSBundle bundleWithPath:@"/bootstrap/Library/Application Support/MusicBar/ImageAssets.bundle"]];
     	}
 
-    	_playPauseButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    	_playPauseButton = [[CPDDMBButton alloc] initWithFrame:CGRectZero];
     	[_playPauseButton addTarget:self action:@selector(handlePlayPauseButton:) forControlEvents:UIControlEventTouchUpInside];
     	[_playPauseButton setImage:playImage forState:UIControlStateNormal];
-    	[_playPauseButton setImage:[forwardImage _flatImageWithColor:[UIColor whiteColor]] forState:UIControlStateHighlighted];
+    	[_playPauseButton setImage:[playImage _flatImageWithColor:[UIColor whiteColor]] forState:UIControlStateHighlighted];
+        _playPauseButton.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     	_playPauseButton.translatesAutoresizingMaskIntoConstraints = NO;
     	[self addSubview:_playPauseButton];
 
     	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_forwardButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-15]];
     	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_backgroundView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:24]];
-    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:24]];
+    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:36]];
+    	[self addConstraint:[NSLayoutConstraint constraintWithItem:_playPauseButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:36]];
 
     	_songTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     	_songTitleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
