@@ -71,3 +71,15 @@
     return orig;
 }
 %end
+
+%hook SBIconController
+-(void)iconTapped:(id)arg1 {
+    if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
+        [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
+            %orig;
+        }];
+        return;
+    }
+    %orig;
+}
+%end
