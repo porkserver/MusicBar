@@ -173,3 +173,9 @@
 @interface SBFolderContainerView : UIView
 @property (nonatomic, retain) NSNumber *forcedBoundsYOffset;
 @end
+
+@interface SpringBoard : UIApplication
+
+-(BOOL)isShowingHomescreen;
+
+@end

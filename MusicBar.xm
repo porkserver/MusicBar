@@ -13,6 +13,10 @@
 
 - (BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
+    if(![self isShowingHomescreen] && ![[UIApplication sharedApplication] _accessibilityFrontMostApplication]) {
+        return %orig;
+    }
+
     void(^musicBarBlock)(void)  = ^(void) {
         if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
             [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
