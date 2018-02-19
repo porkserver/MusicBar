@@ -114,6 +114,10 @@
 + (id)sharedInstance;
 - (id)dockListView;
 - (SBRootFolderController *)_rootFolderController;
+- (BOOL)_isShowingPullDownSearch;
+- (BOOL)_dismissSpotlight:(BOOL)arg1 orTodayView:(BOOL)arg2 animated:(BOOL)arg3 enqueueDismissal:(BOOL)arg4 ;
+- (BOOL)_isAppIconForceTouchControllerPeekingOrShowing;
+- (void)_dismissAppIconForceTouchControllerIfNecessaryAnimated:(BOOL)arg1 withCompletionHandler:(/*^block*/id)arg2 ;
 @end
 
 @interface SBMainDisplaySceneLayoutViewController : UIViewController

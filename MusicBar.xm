@@ -13,6 +13,19 @@
 
 - (BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
+    void(^musicBarBlock)(void)  = ^(void) {
+        if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
+            [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
+                NSLog(@"Dismissed");
+            }];
+        } else {
+            [CPDDMBBarController sharedInstance].isPresenting = YES;
+            [[CPDDMBBarController sharedInstance] presentWithCompletion:^{
+                NSLog(@"Presented");
+            }];
+        }
+    };
+
     /*
         Thanks Ziph0n for this hook and doing the work on reversing the button types. Who knew I'd be reading a thread on a random post and find something so useful for this project
 
@@ -23,15 +36,14 @@
     int force = arg1.allPresses.allObjects[0].force;
 
     if((type == 102) && (force == 1)) {
-        if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
-            [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
-                NSLog(@"Dismissed");
+        SBIconController *iconController = [NSClassFromString(@"SBIconController") sharedInstance];
+        if([iconController _isAppIconForceTouchControllerPeekingOrShowing]) {
+
+            [iconController _dismissAppIconForceTouchControllerIfNecessaryAnimated:YES withCompletionHandler:^{
+                musicBarBlock();
             }];
         } else {
-            [CPDDMBBarController sharedInstance].isPresenting = YES;
-            [[CPDDMBBarController sharedInstance] presentWithCompletion:^{
-                NSLog(@"Presented");
-            }];
+            musicBarBlock();
         }
 
         return NO;
@@ -44,6 +56,7 @@
 %end
 
 %hook SBFolderContainerView
+
 %property (nonatomic, retain) NSNumber *forcedBoundsYOffset;
 
 - (CGRect)bounds {
@@ -54,7 +67,3 @@
     return orig;
 }
 %end
-
-%ctor {
-    NSLog(@"MusicBar Init");
-}
