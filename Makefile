@@ -1,14 +1,14 @@
-TARGET = :clang
-ARCHS = armv7 arm64
-FINALPACKAGE = 0
+TARGET = iphone:clang:10.3:10.0
+ARCHS = arm64
+FINALPACKAGE = 1
 
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = MusicBar
 MusicBar_FILES = MusicBar.xm $(wildcard *.m)
-#MusicBar_FRAMEWORKS = UIKit
-#MusicBar_PRIVATE_FRAMEWORKS
-#MusicBar_LIBRARIES
+MusicBar_FRAMEWORKS = UIKit MediaPlayer
+MusicBar_PRIVATE_FRAMEWORKS = MediaPlayerUI MediaRemote
+#MusicBar_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
