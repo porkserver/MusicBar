@@ -11,15 +11,22 @@ Once an update for Cydia is available, this package will be on a public repo for
 ## To Do
 
 - [X] Fix MusicBar not being touchable on the HS (Thanks, Andy!)
-- [] Prevent presentation when spotlight is presented
-- [] Alternatively dismiss spotlight and then present for ^
-- [] Fix play/pause not being as responsive as it should be
-- [] Implement a better activation method than volume up
-- [] Landscape support
+- [ ] Prevent presentation when spotlight is presented
+- [ ] Alternatively dismiss spotlight and then present for ^
+- [ ] Fix play/pause not being as responsive as it should be
+- [ ] Implement a better activation method than volume up
+- [ ] Landscape support
 
 ## Why FOSS
 
+<<<<<<< HEAD
 You may have read I've stopped making paid packages and made all my previous work free. I did this for a couple reasons: a) I don't have as much time as I did to hack away, b) it was stressful to worry about pirates, c) I just want people to use my shit and enjoy it without worrying about finding cracked copies.
+=======
+You may have read I've stopped making paid packages and made all my previous work free. I did this for a couple reasons: 
+a) I don't have as much time as I did to hack away
+b) it was stressful to worry about pirates
+c) I just want people to use my shit and ejoy it without worrying about finding cracked copies
+>>>>>>> a55ab0e6408820209913da97ce596862c64e4d66
 
 Jailbreaking is going through a tough spot and I think it's time to shed the bullshit. Let's have some fun shall we?
 
