@@ -19,14 +19,10 @@
 
     void(^musicBarBlock)(void)  = ^(void) {
         if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
-            [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
-                NSLog(@"Dismissed");
-            }];
+            [[CPDDMBBarController sharedInstance] dismissWithCompletion:nil];
         } else {
             [CPDDMBBarController sharedInstance].isPresenting = YES;
-            [[CPDDMBBarController sharedInstance] presentWithCompletion:^{
-                NSLog(@"Presented");
-            }];
+            [[CPDDMBBarController sharedInstance] presentWithCompletion:nil];
         }
     };
 

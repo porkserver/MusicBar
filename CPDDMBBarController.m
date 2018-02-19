@@ -53,7 +53,6 @@
 - (SBHomeScreenView *)homescreenViewFromWindow:(SBHomeScreenWindow *)window {
     for(UIView *subview in window.subviews) {
         if([subview isKindOfClass:NSClassFromString(@"SBHomeScreenView")]) {
-            HBLogInfo(@"Got Homescreen View");
             return (SBHomeScreenView *)subview;
         }
     }
@@ -61,6 +60,15 @@
 }
 
 - (void)animatePresentation {
+
+    SBIconController *iconController = [NSClassFromString(@"SBIconController") sharedInstance];
+    [[[iconController _rootFolderController] contentView] _setScrollingDisabled:YES forReason:@"MusicBar"];
+
+    if(@available(iOS 11.0, *)) {
+        [iconController.searchGesture setDisabled:NO forReason:@"MusicBar"];
+    } else {
+        [[NSClassFromString(@"SBSearchGesture") sharedInstance] setDisabled:NO forReason:@"MusicBar"];
+    }
 
     if(_presentedOnSpringBoard) {
 
@@ -109,6 +117,16 @@
 - (void)animateDismissalWithCompletion:(void(^)(void))completion {
 
     [[UIApplication sharedApplication] setStatusBarHidden:NO duration:0.1];
+
+    SBIconController *iconController = [NSClassFromString(@"SBIconController") sharedInstance];
+    [[[iconController _rootFolderController] contentView] _setScrollingDisabled:NO forReason:@"MusicBar"];
+
+    if(@available(iOS 11.0, *)) {
+        [iconController.searchGesture setDisabled:NO forReason:@"MusicBar"];
+    } else {
+        [[NSClassFromString(@"SBSearchGesture") sharedInstance] setDisabled:NO forReason:@"MusicBar"];
+    }
+
 
     if(_presentedOnSpringBoard) {
         SBRootFolderController *rootFolderController = [[NSClassFromString(@"SBIconController") sharedInstance] _rootFolderController];
@@ -174,7 +192,9 @@
         [self updateMediaInformation];
         [self animatePresentation];
     }
-    completion();
+    if(completion) {
+        completion();
+    }
 }
 
 - (void)prepareForPresentingFromApp {

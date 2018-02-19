@@ -82,6 +82,14 @@
 - (id)applicationWithBundleIdentifier:(NSString *)bundleID;
 @end
 
+@interface SBFolderView : UIView
+- (void)_setScrollingDisabled:(BOOL)disables forReason:(NSString *)reason;
+@end
+
+@interface SBFolderController : UIViewController
+@property (nonatomic,retain,readonly) SBFolderView *contentView;
+@end
+
 @interface SBHomeScreenView : UIView
 @end
 
@@ -102,15 +110,17 @@
 -(id)expectedIconForDisplayIdentifier:(NSString*)ident;
 @end
 
-@interface SBRootFolderView : UIView
+@interface SBRootFolderView : SBFolderController
 @end
 
-@interface SBRootFolderController : UIViewController
-@property (nonatomic,readonly) SBRootFolderView * contentView;
+@interface SBRootFolderController : SBFolderController
+@property (nonatomic,readonly) SBFolderView * contentView;
 @end
 
+@class SBSearchGesture;
 @interface SBIconController : NSObject
 @property (nonatomic, retain) SBIconModel* model;
+@property (nonatomic,readonly) SBSearchGesture * searchGesture; // iOS 11+
 + (id)sharedInstance;
 - (id)dockListView;
 - (SBRootFolderController *)_rootFolderController;
@@ -134,6 +144,11 @@
 @interface SBMediaController : NSObject
 @property (copy) SBApplication *nowPlayingApplication;
 + (id)sharedInstance;
+@end
+
+@interface SBSearchGesture : NSObject
++ (instancetype)sharedInstance; // iOS < 11
+- (void)setDisabled:(BOOL)disabled forReason:(NSString *)reason;
 @end
 
 @interface SBSceneManagerCoordinator : NSObject
