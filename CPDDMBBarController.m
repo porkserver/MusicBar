@@ -16,6 +16,7 @@
 @property (assign, nonatomic) BOOL presentedOnSpringBoard;
 
 @property (assign, nonatomic) CGRect originalFrame;
+@property (assign, nonatomic) CGRect sbOriginalFrame;
 
 @property (strong, nonatomic) CPDDMBBarView *barView;
 
@@ -32,7 +33,7 @@
 @implementation CPDDMBBarController
 
 + (instancetype)sharedInstance {
-	static CPDDMBBarController *sharedInstance = nil;
+    static CPDDMBBarController *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         sharedInstance = [[self alloc] init];
@@ -41,11 +42,12 @@
 }
 
 - (instancetype)init {
-	if(self = [super init]) {
+    if(self = [super init]) {
         _nowPlayingController = [[MPUNowPlayingController alloc]init];
         _nowPlayingController.delegate = self;
-	}
-	return self;
+        _sbOriginalFrame = CGRectZero;
+    }
+    return self;
 }
 
 - (SBHomeScreenView *)homescreenViewFromWindow:(SBHomeScreenWindow *)window {
@@ -66,17 +68,20 @@
 
         [[NSClassFromString(@"SBUIController") sharedInstance] setHomeScreenBlurProgress:0.60 behaviorMode:0 completion:nil];
 
-        //- (void)setHomeScreenBlurProgress:(CGFloat)blurProgress behaviorMode:(NSInteger)behavior completion:(void(^)(void))completion
-
-        /*SBHomeScreenWindow* homescreenWindow = ((SBUIController*)[NSClassFromString(@"SBUIController") sharedInstance]).window;*/
-
         SBRootFolderController *rootFolderController = [[NSClassFromString(@"SBIconController") sharedInstance] _rootFolderController];
 
-        _originalFrame = rootFolderController.view.frame;
+        if (CGRectIsEmpty(_sbOriginalFrame)) {
+            _originalFrame = rootFolderController.view.frame;
+            _sbOriginalFrame = rootFolderController.view.frame;
+        }
 
+        SBFolderContainerView *containerView = (SBFolderContainerView *)rootFolderController.view;
         [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.8 initialSpringVelocity:0.3 options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
-
-            rootFolderController.view.frame = CGRectMake(rootFolderController.view.frame.origin.x, rootFolderController.view.frame.origin.y - 109, rootFolderController.view.frame.size.width, rootFolderController.view.frame.size.height);
+            CGRect origBounds = containerView.bounds;
+            origBounds.origin.y = -109;
+            containerView.bounds = origBounds;
+            containerView.forcedBoundsYOffset = [NSNumber numberWithDouble:109];
+            containerView.frame = CGRectMake(rootFolderController.view.frame.origin.x, _sbOriginalFrame.origin.y-(109*2), rootFolderController.view.frame.size.width, rootFolderController.view.frame.size.height);
 
         } completion:^(BOOL finished) {
             if(finished) {
@@ -107,12 +112,14 @@
 
     if(_presentedOnSpringBoard) {
         SBRootFolderController *rootFolderController = [[NSClassFromString(@"SBIconController") sharedInstance] _rootFolderController];
-
+        SBFolderContainerView *containerView = (SBFolderContainerView *)rootFolderController.view;
         [UIView animateWithDuration:0.2 delay:0.0 options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut) animations:^{
-
-            rootFolderController.contentView.frame = _originalFrame;
-
+            containerView.frame = CGRectMake(_sbOriginalFrame.origin.x,109,_sbOriginalFrame.size.width, _sbOriginalFrame.size.height);
         } completion:^(BOOL finished){
+            containerView.frame = _sbOriginalFrame;
+            containerView.bounds = CGRectMake(0,0,_sbOriginalFrame.size.width, _sbOriginalFrame.size.height);
+            containerView.forcedBoundsYOffset = nil;
+            _sbOriginalFrame = CGRectZero;
             if (finished) {
                 [_barView removeFromSuperview];
                 _isPresented = NO;
@@ -155,7 +162,7 @@
 }
 
 - (void)presentWithCompletion:(void(^)(void))completion {
-	if ([[UIApplication sharedApplication] _accessibilityFrontMostApplication]) {
+    if ([[UIApplication sharedApplication] _accessibilityFrontMostApplication]) {
         _presentedOnSpringBoard = NO;
         [self prepareForPresentingFromApp];
         [self performCommonSetup];
@@ -172,7 +179,7 @@
 
 - (void)prepareForPresentingFromApp {
 
-    // Thanks Phillip
+    // Thanks Phillip for Snakebite, you should be able to use these changes to update Snakebit as well
     SBSceneManagerCoordinator* sceneManagerCoordinator = [NSClassFromString(@"SBSceneManagerCoordinator") sharedInstance];
 
     FBSDisplay* mainDisplay = [NSClassFromString(@"FBDisplayManager") mainDisplay];
@@ -208,12 +215,6 @@
 - (void)prepareForPresentingFromSpringBoard {
 
     SBRootFolderController *rootFolderController = [[NSClassFromString(@"SBIconController") sharedInstance] _rootFolderController];
-
-    /*SBHomeScreenWindow* homescreenWindow = ((SBUIController*)[NSClassFromString(@"SBUIController") sharedInstance]).window;
-    homescreenWindow.layer.masksToBounds = NO;
-    homescreenWindow.clipsToBounds = NO;
-
-    SBHomeScreenView *homescreenView = [self homescreenViewFromWindow:homescreenWindow];*/
 
     _barView = [[CPDDMBBarView alloc] initWithFrame:CGRectZero];
     _barView.translatesAutoresizingMaskIntoConstraints = NO;

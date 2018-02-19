@@ -7,8 +7,9 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = MusicBar
 MusicBar_FILES = MusicBar.xm $(wildcard *.m)
 MusicBar_FRAMEWORKS = UIKit MediaPlayer
-MusicBar_PRIVATE_FRAMEWORKS = MediaPlayerUI MediaRemote
+MusicBar_LDFLAGS = ./MediaPlayerUI.tbd ./MediaRemote.tbd
 #MusicBar_CFLAGS = -fobjc-arc
+#MusicBar_LIBRARIES
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

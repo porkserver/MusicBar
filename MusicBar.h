@@ -165,3 +165,7 @@
 -(void) setMarqueeRunning:(BOOL)marqueeRunning;
 -(void) _startMarquee;
 @end
+
+@interface SBFolderContainerView : UIView
+@property (nonatomic, retain) NSNumber *forcedBoundsYOffset;
+@end

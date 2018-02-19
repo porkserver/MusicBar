@@ -13,28 +13,28 @@
 
 - (BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
-	/*
-		Thanks Ziph0n for this hook and doing the work on reversing the button types. Who knew I'd be reading a thread on a random post and find something so useful for this project
+    /*
+        Thanks Ziph0n for this hook and doing the work on reversing the button types. Who knew I'd be reading a thread on a random post and find something so useful for this project
 
-		https://www.reddit.com/r/jailbreak/comments/7u2vcv/upcoming_unitether_a_semi_untether_for_ios_9x_10x/dthmiwa/
-	*/
+        https://www.reddit.com/r/jailbreak/comments/7u2vcv/upcoming_unitether_a_semi_untether_for_ios_9x_10x/dthmiwa/
+    */
 
     int type = arg1.allPresses.allObjects[0].type;
     int force = arg1.allPresses.allObjects[0].force;
 
     if((type == 102) && (force == 1)) {
-    	if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
-    		[[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
-    			NSLog(@"Dismissed");
-    		}];
-    	} else {
-    		[CPDDMBBarController sharedInstance].isPresenting = YES;
-    		[[CPDDMBBarController sharedInstance] presentWithCompletion:^{
+        if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
+            [[CPDDMBBarController sharedInstance] dismissWithCompletion:^{
+                NSLog(@"Dismissed");
+            }];
+        } else {
+            [CPDDMBBarController sharedInstance].isPresenting = YES;
+            [[CPDDMBBarController sharedInstance] presentWithCompletion:^{
                 NSLog(@"Presented");
-    		}];
-    	}
+            }];
+        }
 
-    	return NO;
+        return NO;
 
     }
 
@@ -43,6 +43,18 @@
 
 %end
 
+%hook SBFolderContainerView
+%property (nonatomic, retain) NSNumber *forcedBoundsYOffset;
+
+- (CGRect)bounds {
+    CGRect orig = %orig;
+    if (self.forcedBoundsYOffset) {
+        orig.origin.y -= (CGFloat)[self.forcedBoundsYOffset doubleValue];
+    }
+    return orig;
+}
+%end
+
 %ctor {
-	NSLog(@"MusicBar Init");
+    NSLog(@"MusicBar Init");
 }
