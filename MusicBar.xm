@@ -9,13 +9,31 @@
 #import "MusicBar.h"
 #import "CPDDMBBarController.h"
 
+static void handleTouches(NSSet *touches) {
+    NSUInteger numTaps = [[touches anyObject] tapCount];
+    if (numTaps == 2) {
+         SBIconController *iconController = [NSClassFromString(@"SBIconController") sharedInstance];
+        if([iconController _isAppIconForceTouchControllerPeekingOrShowing]) {
+
+            [iconController _dismissAppIconForceTouchControllerIfNecessaryAnimated:YES withCompletionHandler:^{
+                musicBarBlock();
+            }];
+        } else {
+            musicBarBlock();
+    }
+}
+
+static void addGesture(id self, UIView *target) {
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    tapGesture.numberOfTapsRequired = 2;
+    [target addGestureRecognizer:tapGesture];
+    [tapGesture release];
+}
+
+
 %hook SpringBoard
 
-- (BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
-    if(![self isShowingHomescreen] && ![[UIApplication sharedApplication] _accessibilityFrontMostApplication]) {
-        return %orig;
-    }
 
     void(^musicBarBlock)(void)  = ^(void) {
         if([CPDDMBBarController sharedInstance].isPresented || [CPDDMBBarController sharedInstance].isPresenting) {
@@ -25,27 +43,10 @@
             [[CPDDMBBarController sharedInstance] presentWithCompletion:nil];
         }
     };
-
-    /*
-        Thanks Ziph0n for this hook and doing the work on reversing the button types. Who knew I'd be reading a thread on a random post and find something so useful for this project
-
-        https://www.reddit.com/r/jailbreak/comments/7u2vcv/upcoming_unitether_a_semi_untether_for_ios_9x_10x/dthmiwa/
-    */
-
-    int type = arg1.allPresses.allObjects[0].type;
-    int force = arg1.allPresses.allObjects[0].force;
-
-    if((type == 102) && (force == 1)) {
-        SBIconController *iconController = [NSClassFromString(@"SBIconController") sharedInstance];
-        if([iconController _isAppIconForceTouchControllerPeekingOrShowing]) {
-
-            [iconController _dismissAppIconForceTouchControllerIfNecessaryAnimated:YES withCompletionHandler:^{
-                musicBarBlock();
-            }];
-        } else {
-            musicBarBlock();
+        handleTouches();
+        
         }
-
+        
         return NO;
 
     }
